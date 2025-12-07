@@ -1,0 +1,37 @@
+name: CI/CD Pipeline - Menusitos
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  # TRABAJO 1: INTEGRACIÓN CONTINUA (Build & Test)
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Análisis Estático (Linting)
+        run: npm run lint
+        # Falla si hay errores de sintaxis o malas prácticas
+
+      - name: Pruebas Unitarias (Vitest)
+        run: npm run test:unit
+        # Verifica la lógica de negocio (ej. Generador de IDs)
+
+      - name: Construcción del Proyecto (Build)
+        run: npm run build
+        # Genera los archivos estáticos en la carpeta /dist
